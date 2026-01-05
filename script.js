@@ -1,18 +1,17 @@
 // --- VARIÁVEIS GLOBAIS ---
 let cart = [];
 let total = 0;
-let currentUser = null; // Armazena o usuário logado atualmente
-let allUsers = []; // Banco de dados simulado
+let currentUser = null;
+let allUsers = [];
 
 // --- INICIALIZAÇÃO DO SITE ---
 document.addEventListener('DOMContentLoaded', () => {
-    // 1. Carrega o banco de dados de usuários do LocalStorage
+    // Carrega usuários
     const storedUsers = localStorage.getItem('ghostUsersDB');
     if (storedUsers) {
         allUsers = JSON.parse(storedUsers);
     }
-
-    // 2. Verifica se já existe alguém logado (Sessão persistente)
+    // Verifica sessão
     const savedSession = sessionStorage.getItem('ghostCurrentUser');
     if (savedSession) {
         currentUser = JSON.parse(savedSession);
@@ -20,9 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// --- SISTEMA DE AUTENTICAÇÃO (LOGIN/REGISTRO) ---
-
-// Alterna entre formulário de login e registro
+// --- SISTEMA DE AUTENTICAÇÃO ---
 function toggleAuth(screen) {
     if (screen === 'register') {
         document.getElementById('login-form').style.display = 'none';
@@ -33,42 +30,35 @@ function toggleAuth(screen) {
     }
 }
 
-// Cria novo usuário
 function handleRegister(e) {
     e.preventDefault();
     const name = document.getElementById('reg-name').value;
     const email = document.getElementById('reg-email').value;
     const pass = document.getElementById('reg-pass').value;
 
-    // Verifica se e-mail já existe
     if (allUsers.find(user => user.email === email)) {
         alert("Erro: Este e-mail já está cadastrado.");
         return;
     }
 
-    // Cria o objeto do novo usuário
     const newUser = {
         name: name,
         email: email,
         password: pass,
-        library: [] // Começa com biblioteca vazia
+        library: []
     };
 
-    // Salva no "Banco de Dados"
     allUsers.push(newUser);
     saveDB();
-
     alert("Conta criada com sucesso! Faça login agora.");
     toggleAuth('login');
 }
 
-// Faz o login
 function handleLogin(e) {
     e.preventDefault();
     const email = document.getElementById('login-email').value;
     const pass = document.getElementById('login-pass').value;
 
-    // Procura o usuário no array
     const user = allUsers.find(u => u.email === email && u.password === pass);
 
     if (user) {
@@ -78,53 +68,36 @@ function handleLogin(e) {
     }
 }
 
-// Executa quando o login é bem sucedido
 function loginSuccess(user) {
     currentUser = user;
-    sessionStorage.setItem('ghostCurrentUser', JSON.stringify(user)); // Salva sessão
-    
-    // Atualiza interface: Esconde login, Mostra site
+    sessionStorage.setItem('ghostCurrentUser', JSON.stringify(user));
     document.getElementById('auth-screen').style.display = 'none';
     document.getElementById('app-container').style.display = 'block';
     document.getElementById('user-display').innerText = user.name;
-    
-    // Carrega a biblioteca DESTE usuário
     updateLibraryUI();
 }
 
-// Faz logout
 function logout() {
     currentUser = null;
     sessionStorage.removeItem('ghostCurrentUser');
-    
-    // Reseta interface
     document.getElementById('app-container').style.display = 'none';
     document.getElementById('auth-screen').style.display = 'flex';
     document.getElementById('login-form').reset();
-    
     alert("Você saiu da conta.");
 }
 
-// Salva o estado atual de todos os usuários no navegador
 function saveDB() {
     localStorage.setItem('ghostUsersDB', JSON.stringify(allUsers));
 }
 
-// --- LÓGICA DE NAVEGAÇÃO E UI ---
-
+// --- LÓGICA DE NAVEGAÇÃO ---
 function showSection(sectionId) {
-    // Esconde todas
     const sections = document.querySelectorAll('.content-section');
     sections.forEach(s => s.classList.remove('active-section'));
-    
-    // Remove active dos links
     const links = document.querySelectorAll('nav a');
     links.forEach(l => l.classList.remove('active'));
 
-    // Mostra a selecionada
     document.getElementById(sectionId).classList.add('active-section');
-    
-    // Marca link como ativo
     const activeLink = document.querySelector(`nav a[href="#${sectionId}"]`);
     if(activeLink) activeLink.classList.add('active');
 }
@@ -133,25 +106,16 @@ function toggleCart() {
     document.getElementById('cart-modal').classList.toggle('open');
 }
 
-// --- SISTEMA DE COMPRAS E CARRINHO ---
-
+// --- CARRINHO ---
 function addToCart(name, price) {
-    // Segurança: Verifica se o usuário já tem esse item
     const alreadyOwns = currentUser.library.some(item => item.name === name);
-    if(alreadyOwns) {
-        alert("Você já possui este item na sua biblioteca!");
-        return;
-    }
+    if(alreadyOwns) { alert("Você já possui este item!"); return; }
 
-    // Verifica se já está no carrinho
     const inCart = cart.some(item => item.name === name);
     if(inCart) { alert("Já está no carrinho."); return; }
 
-    // Adiciona
     cart.push({ name, price });
     updateCartUI();
-    
-    // Abre o carrinho
     const modal = document.getElementById('cart-modal');
     if (!modal.classList.contains('open')) modal.classList.add('open');
 }
@@ -160,7 +124,6 @@ function updateCartUI() {
     const container = document.getElementById('cart-items');
     container.innerHTML = '';
     total = 0;
-
     cart.forEach((item, index) => {
         total += item.price;
         container.innerHTML += `
@@ -179,13 +142,11 @@ function removeFromCart(index) {
     updateCartUI();
 }
 
-// --- CHECKOUT (FINALIZAÇÃO) ---
+// --- CHECKOUT ---
 function checkout() {
     if(cart.length === 0) return alert("Carrinho vazio!");
 
     if(confirm(`Confirmar compra fictícia de R$ ${total.toFixed(2)}?`)) {
-        
-        // Adiciona itens à biblioteca do usuário ATUAL
         cart.forEach(item => {
             currentUser.library.push({
                 name: item.name,
@@ -193,29 +154,20 @@ function checkout() {
             });
         });
 
-        // ATUALIZAÇÃO DO "BANCO DE DADOS"
-        // 1. Encontra o usuário na lista geral e atualiza os dados dele
         const userIndex = allUsers.findIndex(u => u.email === currentUser.email);
         allUsers[userIndex] = currentUser;
-
-        // 2. Salva a lista atualizada no LocalStorage
         saveDB();
-
-        // 3. Atualiza a sessão atual
         sessionStorage.setItem('ghostCurrentUser', JSON.stringify(currentUser));
 
-        // Limpa carrinho e redireciona
         cart = [];
         updateCartUI();
         toggleCart();
         updateLibraryUI();
         showSection('biblioteca');
-        
-        alert("Compra realizada com sucesso! Item adicionado à sua conta.");
+        alert("Compra realizada com sucesso!");
     }
 }
 
-// --- BIBLIOTECA DO USUÁRIO ---
 function updateLibraryUI() {
     const container = document.getElementById('library-container');
     const emptyState = document.getElementById('empty-library');
@@ -227,15 +179,13 @@ function updateLibraryUI() {
     } else {
         container.style.display = 'block';
         emptyState.style.display = 'none';
-
-        // Renderiza cada item da biblioteca do usuário
         currentUser.library.forEach(item => {
             const div = document.createElement('div');
             div.classList.add('library-item');
             div.innerHTML = `
                 <div>
                     <h4>${item.name}</h4>
-                    <span class="status">Adquirido em: ${item.date} • Vitalício</span>
+                    <span class="status">Adquirido em: ${item.date}</span>
                 </div>
                 <button class="download-btn" onclick="downloadFile('${item.name}')">
                     <i class="fas fa-download"></i> Download
@@ -247,12 +197,44 @@ function updateLibraryUI() {
 }
 
 function downloadFile(itemName) {
-    alert(`Iniciando download simulado de: ${itemName}...\n(Arquivo fictício)`);
+    alert(`Iniciando download simulado de: ${itemName}...`);
 }
 
-// --- SUPORTE (NETLIFY) ---
+// --- SUPORTE REAL (ENVIO DE E-MAIL) ---
 function handleTicket(event) {
-    // O envio real ocorre via Netlify Forms (backend automático).
-    // O JS aqui serve apenas para feedback visual se não houver redirecionamento.
-    alert("Ticket enviado para o sistema de suporte!");
+    event.preventDefault(); // Não recarrega a página
+
+    const btn = document.getElementById('btn-submit');
+    const originalText = btn.innerText;
+    
+    // Captura os dados do formulário
+    const form = event.target;
+    const formData = new FormData(form);
+
+    // Mude o texto do botão para dar feedback
+    btn.innerText = "Enviando...";
+    btn.disabled = true;
+
+    // --- COLOQUE SEU EMAIL ABAIXO ONDE DIZ "SEU_EMAIL_AQUI" ---
+    // Exemplo: https://formsubmit.co/ajax/joao@gmail.com
+    const emailDestino = "gabrielws12345@gmail.com"; 
+
+    // Envio via AJAX para não sair da página
+    fetch(`https://formsubmit.co/ajax/${emailDestino}`, {
+        method: "POST",
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        alert("Ticket enviado com sucesso! Verifique seu e-mail em breve.");
+        form.reset();
+    })
+    .catch(error => {
+        alert("Erro ao enviar. Verifique se colocou o e-mail correto no código.");
+        console.error('Erro:', error);
+    })
+    .finally(() => {
+        btn.innerText = originalText;
+        btn.disabled = false;
+    });
 }
