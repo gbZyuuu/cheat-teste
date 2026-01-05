@@ -1,1 +1,113 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GhostCheats - Soluções Fictícias</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
 
+    <header>
+        <div class="logo">Ghost<span class="highlight">Cheats</span></div>
+        <nav>
+            <ul>
+                <li><a href="#loja" class="active" onclick="showSection('loja')">Loja</a></li>
+                <li><a href="#biblioteca" onclick="showSection('biblioteca')">Minha Biblioteca</a></li>
+                <li><a href="#suporte" onclick="showSection('suporte')">Suporte (Ticket)</a></li>
+                <li><a href="#termos" onclick="showSection('termos')">Termos de Uso</a></li>
+            </ul>
+        </nav>
+        <div class="cart-icon" onclick="toggleCart()">
+            <i class="fas fa-shopping-cart"></i>
+            <span id="cart-count">0</span>
+        </div>
+    </header>
+
+    <section id="loja" class="content-section active-section">
+        <h2>Produtos em Destaque</h2>
+        <div class="products-grid">
+            <div class="product-card">
+                <div class="product-image" style="background-image: url('https://placehold.co/600x400/1a1a1a/00ff00?text=AimLock+V2');"></div>
+                <h3>AimLock V2 (Fictício)</h3>
+                <p>Mira automática com suavização humana e bypass simulado.</p>
+                <div class="price">R$ 49,90</div>
+                <button onclick="addToCart('AimLock V2', 49.90)">Adicionar ao Carrinho</button>
+            </div>
+
+            <div class="product-card">
+                <div class="product-image" style="background-image: url('https://placehold.co/600x400/1a1a1a/purple?text=WallHack+Pro');"></div>
+                <h3>WallVision Pro</h3>
+                <p>Veja através das paredes. ESP completo com info de saúde.</p>
+                <div class="price">R$ 35,00</div>
+                <button onclick="addToCart('WallVision Pro', 35.00)">Adicionar ao Carrinho</button>
+            </div>
+
+            <div class="product-card">
+                <div class="product-image" style="background-image: url('https://placehold.co/600x400/1a1a1a/orange?text=Speed+Script');"></div>
+                <h3>SpeedRunner Script</h3>
+                <p>Manipulação de velocidade de movimento indetectável (teste).</p>
+                <div class="price">R$ 29,90</div>
+                <button onclick="addToCart('SpeedRunner Script', 29.90)">Adicionar ao Carrinho</button>
+            </div>
+        </div>
+    </section>
+
+    <section id="biblioteca" class="content-section">
+        <h2>Sua Biblioteca</h2>
+        <p>Você ainda não possui softwares ativos. Compre na loja para liberar o download.</p>
+        <div class="empty-state">
+            <i class="fas fa-ghost"></i>
+            <p>Nada por aqui...</p>
+        </div>
+    </section>
+
+    <section id="suporte" class="content-section">
+        <h2>Abrir Ticket de Suporte</h2>
+        <div class="ticket-form-container">
+            <form onsubmit="sendTicket(event)">
+                <label>Seu E-mail</label>
+                <input type="email" placeholder="ex: usuario@email.com" required>
+                
+                <label>Assunto</label>
+                <select>
+                    <option>Problema na Instalação</option>
+                    <option>Pagamento</option>
+                    <option>Bug no Software</option>
+                </select>
+
+                <label>Mensagem</label>
+                <textarea rows="5" placeholder="Descreva seu problema..." required></textarea>
+
+                <button type="submit">Enviar Ticket</button>
+            </form>
+        </div>
+    </section>
+
+    <section id="termos" class="content-section">
+        <h2>Termos de Uso</h2>
+        <div class="terms-text">
+            <p>1. Este é um site puramente fictício para fins de estudo de programação.</p>
+            <p>2. Nenhum software real é vendido aqui.</p>
+            <p>3. Ao clicar em comprar, você entende que é uma simulação de carrinho de compras.</p>
+            <p>4. Não nos responsabilizamos por bans em jogos, pois nossos produtos não existem.</p>
+        </div>
+    </section>
+
+    <div id="cart-modal" class="cart-modal">
+        <div class="cart-header">
+            <h3>Seu Carrinho</h3>
+            <span class="close-btn" onclick="toggleCart()">&times;</span>
+        </div>
+        <div id="cart-items">
+            </div>
+        <div class="cart-footer">
+            <p>Total: <span id="cart-total">R$ 0,00</span></p>
+            <button onclick="checkout()">Finalizar Compra (Simulação)</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
