@@ -1,1 +1,238 @@
+/* Reset Básico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
 
+body {
+    background-color: #121212; /* Fundo escuro */
+    color: #e0e0e0;
+}
+
+/* Header */
+header {
+    background-color: #1a1a1a;
+    padding: 20px 50px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #00ff88;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: bold;
+    color: #fff;
+}
+
+.highlight {
+    color: #00ff88;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+}
+
+nav a {
+    text-decoration: none;
+    color: #fff;
+    font-weight: 500;
+    transition: 0.3s;
+    cursor: pointer;
+}
+
+nav a:hover, nav a.active {
+    color: #00ff88;
+}
+
+.cart-icon {
+    cursor: pointer;
+    position: relative;
+    font-size: 20px;
+}
+
+#cart-count {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    background: #00ff88;
+    color: #000;
+    font-size: 12px;
+    padding: 2px 6px;
+    border-radius: 50%;
+    font-weight: bold;
+}
+
+/* Seções */
+.content-section {
+    display: none; /* Esconde todas por padrão */
+    padding: 50px;
+    max-width: 1200px;
+    margin: 0 auto;
+    animation: fadeIn 0.5s;
+}
+
+.active-section {
+    display: block; /* Mostra a ativa */
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+h2 {
+    color: #00ff88;
+    margin-bottom: 30px;
+    border-left: 5px solid #00ff88;
+    padding-left: 15px;
+}
+
+/* Grid de Produtos */
+.products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+}
+
+.product-card {
+    background: #1e1e1e;
+    border: 1px solid #333;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: 0.3s;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0 15px rgba(0, 255, 136, 0.2);
+    border-color: #00ff88;
+}
+
+.product-image {
+    height: 180px;
+    background-size: cover;
+    background-position: center;
+}
+
+.product-card h3, .product-card p, .product-card .price {
+    padding: 10px 20px;
+}
+
+.product-card h3 { color: #fff; }
+.product-card p { font-size: 14px; color: #aaa; }
+.product-card .price { font-size: 20px; color: #00ff88; font-weight: bold; }
+
+.product-card button {
+    width: 100%;
+    padding: 15px;
+    background: #00ff88;
+    border: none;
+    color: #000;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.product-card button:hover {
+    background: #00cc6a;
+}
+
+/* Formulário e Termos */
+.ticket-form-container form {
+    display: flex;
+    flex-direction: column;
+    max-width: 600px;
+    gap: 15px;
+}
+
+input, select, textarea {
+    padding: 10px;
+    background: #2a2a2a;
+    border: 1px solid #444;
+    color: #fff;
+    border-radius: 5px;
+}
+
+button[type="submit"] {
+    padding: 10px;
+    background: #00ff88;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.terms-text p {
+    margin-bottom: 15px;
+    line-height: 1.6;
+}
+
+/* Carrinho Lateral */
+.cart-modal {
+    position: fixed;
+    top: 0;
+    right: -400px; /* Escondido */
+    width: 350px;
+    height: 100%;
+    background: #1a1a1a;
+    box-shadow: -5px 0 15px rgba(0,0,0,0.5);
+    transition: 0.4s;
+    z-index: 200;
+    display: flex;
+    flex-direction: column;
+}
+
+.cart-modal.open {
+    right: 0;
+}
+
+.cart-header {
+    padding: 20px;
+    background: #222;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #333;
+}
+
+.close-btn {
+    font-size: 24px;
+    cursor: pointer;
+}
+
+#cart-items {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.cart-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #333;
+    padding-bottom: 10px;
+}
+
+.cart-footer {
+    padding: 20px;
+    border-top: 1px solid #333;
+    background: #222;
+}
+
+.cart-footer button {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    background: #00ff88;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+}
