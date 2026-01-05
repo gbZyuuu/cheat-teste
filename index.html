@@ -96,23 +96,22 @@
         <section id="suporte" class="content-section">
             <h2>Abrir Ticket de Suporte</h2>
             <div class="ticket-form-container">
-                <form name="ticket-form" method="POST" data-netlify="true" onsubmit="handleTicket(event)">
-                    <input type="hidden" name="form-name" value="ticket-form">
-
+                <form id="support-form" onsubmit="handleTicket(event)">
+                    
                     <label>Seu E-mail</label>
                     <input type="email" name="email" placeholder="ex: usuario@email.com" required>
                     
                     <label>Assunto</label>
                     <select name="assunto">
-                        <option value="instalacao">Problema na Instalação</option>
-                        <option value="pagamento">Pagamento</option>
-                        <option value="bug">Bug no Software</option>
+                        <option value="Instalacao">Problema na Instalação</option>
+                        <option value="Pagamento">Pagamento</option>
+                        <option value="Bug">Bug no Software</option>
                     </select>
 
                     <label>Mensagem</label>
-                    <textarea name="mensagem" rows="5" placeholder="Descreva seu problema..." required></textarea>
+                    <textarea name="message" rows="5" placeholder="Descreva seu problema..." required></textarea>
 
-                    <button type="submit">Enviar Ticket</button>
+                    <button type="submit" id="btn-submit">Enviar Ticket</button>
                 </form>
             </div>
         </section>
